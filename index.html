@@ -1,40 +1,121 @@
 <!DOCTYPE HTML>
 <!--
-	Eventually by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+    Story by HTML5 UP
+    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html>
-	<head>
-		<title>Eventually by HTML5 UP</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
-	<body class="is-preload">
+    <head>
+        <title>Read No More</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    </head>
+    <body class="is-preload">
 
-		<!-- Header -->
-			<header id="header">
-				<h1>Read No More</h1>
-				<p>Plongez dans un monde d'histoires captivantes,<br>
-				où chaque mot prend vie à travers votre écoute attentive.</p>
-			</header>
+        <!-- Wrapper -->
+            <div id="wrapper" class="divided">
 
-		<!-- Footer -->
-			<footer id="footer">
-				<ul class="icons">
-					<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-					<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-					<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-					<li><a href="#" class="icon fa-envelope"><span class="label">Email</span></a></li>
-				</ul>
-				<ul class="copyright">
-					<li>&copy; Read No More.</li><li>Credits: <a href="http://html5up.net">HTML5 UP</a></li>
-				</ul>
-			</footer>
+                    <section class="banner style1 orient-left content-align-left image-position-ight fullscreen onload-image-fade-in onload-content-fade-right">
+                        <div class="content">
+                            <h1>Read No More </h1>
+                            <p class="major">Plongez dans un monde d'histoires captivantes, où chaque mot prend vie à travers votre écoute attentive.</p>
+                            <ul class="actions stacked">
+                                <li><a href="#booklist" class="button big wide smooth-scroll-middle">Découvrir</a></li>
+                            </ul>
+                        </div>
+                        <div class="image">
+                            <img src="images/banner.jpg" alt="" />
+                        </div>
+                    </section>
 
-		<!-- Scripts -->
-			<script src="assets/js/main.js"></script>
+                    <section class="wrapper style1 align-center">
+						<div class="inner">
+                            <section>
+                                <div class="content">
+                                    <div class="table-wrapper">
+                                        <table id="booklist">
+                                            <tbody>
+                                                <!-- <tr>
+                                                    <td>Ante turpis integer aliquet porttitor.</td>
+                                                    <td><a href="#" class=" icon solid fa-download">Télécharger</a></td>
+                                                </tr> -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </section>
 
-	</body>
+                <!-- Footer -->
+                    <footer class="wrapper style1 align-center">
+                        <div class="inner">
+                            <ul class="icons">
+                                <li><a href="#" class="icon brands style2 fa-twitter"><span class="label">Twitter</span></a></li>
+                                <li><a href="#" class="icon brands style2 fa-facebook-f"><span class="label">Facebook</span></a></li>
+                                <li><a href="#" class="icon brands style2 fa-youtube"><span class="label">Youtube</span></a></li>
+                                <li><a href="#" class="icon brands style2 fa-instagram"><span class="label">Instagram</span></a></li>
+                                <li><a href="#" class="icon brands style2 fa-tiktok"><span class="label">TikTok</span></a></li>
+                                <li><a href="#" class="icon style2 fa-envelope"><span class="label">Email</span></a></li>
+                            </ul>
+                            <p>&copy; Read No More. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+                        </div>
+                    </footer>
+
+            </div>
+
+        <!-- Scripts -->
+            <script src="assets/js/jquery.min.js"></script>
+            <script src="assets/js/jquery.scrollex.min.js"></script>
+            <script src="assets/js/jquery.scrolly.min.js"></script>
+            <script src="assets/js/browser.min.js"></script>
+            <script src="assets/js/breakpoints.min.js"></script>
+            <script src="assets/js/util.js"></script>
+            <script src="assets/js/main.js"></script>
+
+            <script>
+                var tbodyRef = document.querySelector("#booklist tbody");
+                var baseUrl = "https://raw.githubusercontent.com/readnomore/audiobooks/master/"
+                fetch(new URL("index.json", baseUrl))
+                .then(raw => raw.json())
+                .then(res => {
+                    res.folders.forEach(e => {
+                        fetch(new URL(e.path + "/index.json" , baseUrl))
+                        .then(raw => raw.json())
+                        .then(res => {
+                            var authorUrl = new URL(e.path + "/", baseUrl).href;
+                            res.files.forEach(f => {
+                                var audioLink = new URL(f.path, authorUrl).href;
+                                var newRow = tbodyRef.insertRow();
+                                var newCell = newRow.insertCell();
+                                var nameNode = document.createTextNode(f.name);
+                                newCell.appendChild(nameNode);
+
+                                var audioElem = document.createElement('audio');
+                                audioElem.setAttribute('controls', true);
+                                var sourceAudioElem = document.createElement('source');
+                                sourceAudioElem.setAttribute('src', audioLink);
+                                sourceAudioElem.setAttribute('type', "audio/mpeg");
+                                audioElem.appendChild(sourceAudioElem)
+                                newCell = newRow.insertCell();
+                                newCell.appendChild(audioElem);
+
+                                var aElem = document.createElement('a');
+                                var aText = document.createTextNode(" ");
+                                aElem.setAttribute('class', "icon solid fa-download");
+                                aElem.setAttribute('href', audioLink);
+                                aElem.appendChild(aText);
+                                newCell = newRow.insertCell();
+                                newCell.appendChild(aElem);
+                            })
+                    })
+                    });
+                    
+                })
+                .catch(err => { throw err });
+            </script>
+
+    </body>
 </html>
